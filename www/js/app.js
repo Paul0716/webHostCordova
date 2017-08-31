@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCordova'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,7 +20,34 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    $rootScope.$on('$cordovaBatteryStatus:status', function (result) {
+      $rootScope.batteryLevel = result.level;       // (0 - 100)
+      $rootScope.isPluggedIn  = result.isPlugged;   // bool
+    });
+
+    $rootScope.$on('$cordovaBatteryStatus:critical', function (result) {
+      $rootScope.batteryLevel = result.level;       // (0 - 100)
+      $rootScope.isPluggedIn  = result.isPlugged;   // bool
+    });
+
+    $rootScope.$on('$cordovaBatteryStatus:low', function (result) {
+      $rootScope.batteryLevel = result.level;       // (0 - 100)
+      $rootScope.isPluggedIn  = result.isPlugged;   // bool
+    });
+
+    $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+      $rootScope.netWorkType = netWorkState;
+    })
+
+    // listen for Offline event
+    $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+      $rootScope.netWorkType = netWorkState;
+    });
+
+
   });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
